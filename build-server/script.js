@@ -7,8 +7,8 @@ const mime = require("mime-types");
 const s3Client = new S3Client({
     region: "us-east-1",
     credentials: {
-        accessKeyId: "",
-        secretAccessKey: "",
+        accessKeyId: "AKIAXYMBNLJHWXEAESN6",
+        secretAccessKey: "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",
     },
 });
 
@@ -39,8 +39,10 @@ async function init() {
                 continue;
             }
 
+            console.log("Uploading", file);
+
             const command = new PutObjectCommand({
-                Bucket: "XXXXXXXXX",
+                Bucket: "deployment-bucket-outputs",
                 Key: `__outputs/${PROJECT_ID}/${file}`,
                 Body: fs.createReadStream(file),
                 ContentType: mime.lookup(file),
@@ -48,8 +50,7 @@ async function init() {
 
             await s3Client.send(command);
 
-            const filePath = path.join(dist, file);
-            fs.copyFileSync(filePath, path.join(__dirname, "dist", file));
+            console.log("Uploaded", file);
         }
     });
 }
