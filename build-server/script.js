@@ -15,7 +15,7 @@ const s3Client = new S3Client({
 const PROJECT_ID = process.env.PROJECT_ID;
 
 async function init() {
-    console.log("Executing script.js");
+    console.log("[.] Executing script.js");
     const outDir = path.join(__dirname, "output");
 
     const p = exec(`cd ${outDir} && npm install && npm run build`);
@@ -35,17 +35,18 @@ async function init() {
         const files = fs.readdirSync(dist, { recursive: true });
 
         for (const file of files) {
-            if (fs.lstatSync(file).isDirectory()) {
+            const filePath = path.join(dist, file);
+            if (fs.lstatSync(filePath).isDirectory()) {
                 continue;
             }
 
-            console.log("Uploading", file);
+            console.log("Uploading", filePath);
 
             const command = new PutObjectCommand({
                 Bucket: "deployment-bucket-outputs",
                 Key: `__outputs/${PROJECT_ID}/${file}`,
-                Body: fs.createReadStream(file),
-                ContentType: mime.lookup(file),
+                Body: fs.createReadStream(filePath),
+                ContentType: mime.lookup(filePath),
             });
 
             await s3Client.send(command);
@@ -54,3 +55,5 @@ async function init() {
         }
     });
 }
+
+init();
