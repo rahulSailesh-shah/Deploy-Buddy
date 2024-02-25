@@ -21,15 +21,15 @@ async function init() {
     const p = exec(`cd ${outDir} && npm install && npm run build`);
 
     p.stdout.on("data", (data) => {
-        console.log(data.toString());
+        console.log("[.]", data.toString());
     });
 
     p.stdout.on("error", (err) => {
-        console.log(err);
+        console.log("[x]", err);
     });
 
     p.on("close", async () => {
-        console.log("Build Complete");
+        console.log("[.] Build Complete");
 
         const dist = path.join(__dirname, "output", "dist");
         const files = fs.readdirSync(dist, { recursive: true });
@@ -40,7 +40,7 @@ async function init() {
                 continue;
             }
 
-            console.log("Uploading", filePath);
+            console.log("[.] Uploading", filePath);
 
             const command = new PutObjectCommand({
                 Bucket: "deployment-bucket-outputs",
@@ -51,7 +51,7 @@ async function init() {
 
             await s3Client.send(command);
 
-            console.log("Uploaded", file);
+            console.log("[.] Uploaded", file);
         }
     });
 }
