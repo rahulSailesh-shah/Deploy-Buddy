@@ -20,7 +20,7 @@ const publisher = new Redis(
 const PROJECT_ID = process.env.PROJECT_ID;
 
 const publishLog = (log) => {
-    publisher.publish(`logs: ${PROJECT_ID}`, JSON.stringify({ log }));
+    publisher.publish(`logs:${PROJECT_ID}`, JSON.stringify({ log }));
 };
 
 async function init() {
@@ -54,7 +54,7 @@ async function init() {
             }
 
             console.log("[.] Uploading", filePath);
-            publishLog("Uploading ", file);
+            publishLog(`Uploading ${file}`);
 
             const command = new PutObjectCommand({
                 Bucket: "deployment-bucket-outputs",
@@ -65,7 +65,7 @@ async function init() {
 
             await s3Client.send(command);
             console.log("[.] Uploaded", file);
-            publishLog("Uploaded ", file);
+            publishLog(`Uploaded ${file}`);
         }
 
         publishLog("Done...");
