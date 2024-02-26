@@ -20,9 +20,7 @@ const publisher = new Redis(
 const PROJECT_ID = process.env.PROJECT_ID;
 
 const publishLog = (log) => {
-    publisher.publish(`logs: ${PROJECT_ID}`, JSON.stringify(log));
-    console.log("[.] Build complete");
-    process.exit(0);
+    publisher.publish(`logs: ${PROJECT_ID}`, JSON.stringify({ log }));
 };
 
 async function init() {
@@ -71,6 +69,8 @@ async function init() {
         }
 
         publishLog("Done...");
+        console.log("[.] Done...");
+        process.exit(0);
     });
 }
 
