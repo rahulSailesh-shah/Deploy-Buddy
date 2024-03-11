@@ -3,7 +3,7 @@ const httpProxy = require("http-proxy");
 
 const app = express();
 const port = 8000;
-const BASE_PATH = `https://deployment-bucket-outputs.s3.amazonaws.com/__outputs`;
+const BASE_PATH = process.env.S3_BASE;
 
 const proxy = httpProxy.createProxyServer();
 

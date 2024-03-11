@@ -8,14 +8,12 @@ const Redis = require("ioredis");
 const s3Client = new S3Client({
     region: "us-east-1",
     credentials: {
-        accessKeyId: "AKIAXYMBNLJHWXEAESN6",
-        secretAccessKey: "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",
+        accessKeyId: process.env.AWS_ACCESS,
+        secretAccessKey: process.env.AWS_SECRET,
     },
 });
 
-const publisher = new Redis(
-    "rediss://default:AVNS_DPRGWqwTnK7zsvqlKeH@redis-34e9652d-shah-1a80.a.aivencloud.com:10181"
-);
+const publisher = new Redis(process.env.REDIS_URL);
 
 const PROJECT_ID = process.env.PROJECT_ID;
 
