@@ -10,19 +10,17 @@ const PORT = 3000;
 const ecsClient = new ECSClient({
     region: "us-east-1",
     credentials: {
-        accessKeyId: "AKIAXYMBNLJHWXEAESN6",
-        secretAccessKey: "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",
+        accessKeyId: process.AWS_ACCESS,
+        secretAccessKey: process.AWS_SECRET,
     },
 });
 
 const config = {
-    CLUSTER: "arn:aws:ecs:us-east-1:533384223311:cluster/builder-server",
-    TASK: "arn:aws:ecs:us-east-1:533384223311:task-definition/builder-task",
+    CLUSTER: process.AWS_CLUSTER,
+    TASK: process.AWS_TASK,
 };
 
-const subscriber = new Redis(
-    "rediss://default:AVNS_DPRGWqwTnK7zsvqlKeH@redis-34e9652d-shah-1a80.a.aivencloud.com:10181"
-);
+const subscriber = new Redis(process.env.REDIS_URL);
 
 const io = new Server({ cors: "*" });
 
@@ -93,7 +91,6 @@ const initRedisSubscribe = async () => {
     console.log("Subscribed to logs...");
     subscriber.psubscribe("logs:*");
     subscriber.on("pmessage", (pattern, channel, message) => {
-        console.log("CHANNEL", channel);
         console.log(message);
         io.to(channel).emit("message", message);
     });
